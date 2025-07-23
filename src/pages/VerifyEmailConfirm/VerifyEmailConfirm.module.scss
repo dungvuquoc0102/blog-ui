@@ -1,0 +1,51 @@
+@use "../../styles/mixins" as *;
+
+.loadingContainer {
+  @include flex-center;
+  min-height: 400px;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh;
+  flex-direction: column;
+  padding: 2rem;
+  text-align: center;
+  background-color: #f9f9f9;
+}
+
+.success {
+  color: #2e7d32; // Màu xanh lá đậm
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+}
+
+.error {
+  color: #d32f2f; // Màu đỏ đậm
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+}
+
+button {
+  padding: 0.6rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  background-color: #1976d2 !important; // Màu xanh dương
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #1565c0 !important;
+  }
+
+  &:active {
+    transform: scale(0.97);
+  }
+}

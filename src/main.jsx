@@ -3,15 +3,17 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import { AppRoutes, ScrollToTop, ErrorBoundary } from "./components";
 import "./styles/index.scss";
+import { Provider } from "react-redux";
+import { store } from "./store/store";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-    <React.StrictMode>
-        <ErrorBoundary>
-            <BrowserRouter>
-                <ScrollToTop>
-                    <AppRoutes />
-                </ScrollToTop>
-            </BrowserRouter>
-        </ErrorBoundary>
-    </React.StrictMode>
+  <ErrorBoundary>
+    <Provider store={store}>
+      <BrowserRouter>
+        <ScrollToTop>
+          <AppRoutes />
+        </ScrollToTop>
+      </BrowserRouter>
+    </Provider>
+  </ErrorBoundary>
 );
