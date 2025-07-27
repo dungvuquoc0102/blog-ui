@@ -18,6 +18,7 @@ const VerifyEmailConfirm = () => {
         const result = await post("/auth/verify-email", { token });
         if (result) {
           setIsSuccess(true);
+
           localStorage.setItem("accessToken", result.data.accessToken);
           localStorage.setItem("refreshToken", result.data.refreshToken);
         } else {
