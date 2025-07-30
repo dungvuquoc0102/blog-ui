@@ -71,7 +71,7 @@ const Login = () => {
       navigate("/", { replace: true });
     } catch (error) {
       console.error("Login failed:", error);
-      setErrors({ submit: "Login failed. Please try again." });
+      setErrors({ submit: "Đăng nhập thất bại. Vui lòng thử lại!" });
     } finally {
       setIsSubmitting(false);
     }

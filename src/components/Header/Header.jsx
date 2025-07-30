@@ -7,6 +7,7 @@ import NotificationDropdown from "../NotificationDropdown/NotificationDropdown";
 import styles from "./Header.module.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUser, logout } from "@/features/user/userSlice";
+import { toast } from "react-toastify";
 
 const Header = () => {
   // Mock authentication state - trong thực tế sẽ từ context/store
@@ -93,13 +94,18 @@ const Header = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const handleLogout = () => {
-    dispatch(logout());
+  const handleLogout = async () => {
+    try {
+      await dispatch(logout()).unwrap();
 
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("refreshToken");
-    setIsDropdownOpen(false);
-    setIsNotificationOpen(false);
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+    } catch (error) {
+      toast.error(error);
+    } finally {
+      setIsDropdownOpen(false);
+      setIsNotificationOpen(false);
+    }
   };
 
   const handleNotificationToggle = () => {

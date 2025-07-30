@@ -22,11 +22,9 @@ export const logout = createAsyncThunk(
     try {
       const { refreshToken } = getState().user;
 
-      if (!refreshToken) {
-        throw new Error("Không tìm thấy refresh token");
+      if (refreshToken) {
+        await post("/auth/logout", { refreshToken: refreshToken });
       }
-
-      await post("/auth/logout", { refreshToken: refreshToken });
 
       return true;
     } catch (error) {
@@ -39,9 +37,9 @@ export const logout = createAsyncThunk(
 
 export const login = createAsyncThunk(
   "user/login",
-  async ({ email, password }, { dispatch, rejectWithValue }) => {
+  async ({ email, password, rememberMe }, { dispatch, rejectWithValue }) => {
     try {
-      const res = await post("/auth/login", { email, password });
+      const res = await post("/auth/login", { email, password, rememberMe });
 
       return {
         accessToken: res.data.accessToken,
@@ -104,7 +102,9 @@ const userSlice = createSlice({
       })
       .addCase(login.fulfilled, (state, action) => {
         localStorage.setItem("accessToken", action.payload.accessToken);
-        localStorage.setItem("refreshToken", action.payload.refreshToken);
+        if (action.payload.refreshToken) {
+          localStorage.setItem("refreshToken", action.payload.refreshToken);
+        }
 
         state.accessToken = action.payload.accessToken;
         state.refreshToken = action.payload.refreshToken;
