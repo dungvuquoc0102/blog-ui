@@ -63,15 +63,18 @@ httpRequest.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        const res = await axios.post(
+        const {
+          data: { data: tokenData },
+        } = await axios.post(
           `${import.meta.env.VITE_API_URL}/auth/refresh-token`,
           {
             refreshToken,
           }
         );
+        console.log(tokenData);
 
         const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
-          res.data;
+          tokenData;
 
         localStorage.setItem("accessToken", newAccessToken);
         localStorage.setItem("refreshToken", newRefreshToken);
@@ -99,9 +102,8 @@ const send = async (method, url, data = {}, config = {}) => {
       ...(method === "get" || method === "delete" ? {} : { data }),
       ...config,
     });
-    return response;
+    return response.data;
   } catch (error) {
-    console.error(`Lỗi ở file httpRequest:`, error.message || error);
     throw new Error("Có lỗi xảy ra khi gửi request tới server");
   }
 };

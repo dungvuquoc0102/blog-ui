@@ -3,25 +3,25 @@ import PropTypes from "prop-types";
 import styles from "./AuthLayout.module.scss";
 
 const AuthLayout = ({ children }) => {
-    return (
-        <div className={styles.layout}>
-            <div className={styles.container}>
-                {/* Auth Content */}
-                <div className={styles.content}>{children || <Outlet />}</div>
+  return (
+    <div className={styles.layout}>
+      <div className={styles.container}>
+        {/* Auth Content */}
+        <div className={styles.content}>{children || <Outlet />}</div>
 
-                {/* Footer */}
-                <div className={styles.footer}>
-                    <p className="text-muted text-center">
-                        &copy; 2024 BlogUI. All rights reserved.
-                    </p>
-                </div>
-            </div>
+        {/* Footer */}
+        <div className={styles.footer}>
+          <p className="text-muted text-center">
+            &copy; 2025 BlogUI. All rights reserved.
+          </p>
         </div>
-    );
+      </div>
+    </div>
+  );
 };
 
 AuthLayout.propTypes = {
-    children: PropTypes.node,
+  children: PropTypes.node,
 };
 
 export default AuthLayout;

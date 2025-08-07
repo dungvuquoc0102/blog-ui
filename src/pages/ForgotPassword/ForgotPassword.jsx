@@ -53,14 +53,12 @@ const ForgotPassword = () => {
     setIsSubmitting(true);
 
     try {
-      const result = await post("/forgot-password", formData);
-
-      console.log(result);
+      await post("/auth/forgot-password", formData);
 
       setIsSubmitted(true);
     } catch (error) {
       setErrors({
-        submit: "Failed to send reset email. Please try again.",
+        submit: "Địa chỉ email không hợp lệ",
       });
     } finally {
       setIsSubmitting(false);
@@ -72,8 +70,7 @@ const ForgotPassword = () => {
 
     try {
       // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      console.log("Reset email resent to:", formData.email);
+      await post("/auth/forgot-password", formData);
     } catch (error) {
       console.error("Failed to resend email:", error);
     } finally {

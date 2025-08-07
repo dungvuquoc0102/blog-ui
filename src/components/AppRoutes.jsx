@@ -1,5 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import { Suspense, lazy } from "react";
+
 import AppLayout from "../layouts/AppLayout/AppLayout";
 import FullscreenLayout from "../layouts/FullscreenLayout/FullscreenLayout";
 import AuthLayout from "../layouts/AuthLayout/AuthLayout";

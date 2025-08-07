@@ -6,8 +6,8 @@ export const fetchUser = createAsyncThunk(
   "user/fetchUser",
   async (_, thunkAPI) => {
     try {
-      const res = await get("/auth/me");
-      return res.data;
+      const userInfo = await get("/auth/me");
+      return userInfo;
     } catch (error) {
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || "Lỗi khi lấy thông tin user"
@@ -39,14 +39,20 @@ export const login = createAsyncThunk(
   "user/login",
   async ({ email, password, rememberMe }, { dispatch, rejectWithValue }) => {
     try {
-      const res = await post("/auth/login", { email, password, rememberMe });
+      const tokenData = await post("/auth/login", {
+        email,
+        password,
+        rememberMe,
+      });
 
       return {
-        accessToken: res.data.accessToken,
-        refreshToken: res.data.refreshToken,
+        accessToken: tokenData.accessToken,
+        refreshToken: tokenData.refreshToken,
       };
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message || "Login failed");
+      console.dir(error);
+
+      return rejectWithValue(error || "Login failed");
     }
   }
 );
@@ -77,14 +83,15 @@ const userSlice = createSlice({
         state.status = "loading";
       })
       .addCase(fetchUser.fulfilled, (state, action) => {
-        state.user = action.payload;
         state.status = "succeeded";
+        state.isAuthenticated = true;
+        state.user = action.payload;
       })
       .addCase(fetchUser.rejected, (state, action) => {
         state.status = "failed";
-        state.error = action.payload;
         state.isAuthenticated = false;
         state.user = null;
+        state.error = action.payload;
       })
       .addCase(logout.fulfilled, (state) => {
         state.user = null;

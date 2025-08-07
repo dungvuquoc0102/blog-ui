@@ -1,9 +1,13 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Input, Button } from "../../components";
-import styles from "./Login.module.scss";
 import { useDispatch } from "react-redux";
+import { useGoogleLogin, googleLogout } from "@react-oauth/google";
+
+import styles from "./Login.module.scss";
 import { login } from "@/features/user/userSlice";
+import { post } from "@/utils/httpRequest";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const [errors, setErrors] = useState({});
@@ -75,6 +79,59 @@ const Login = () => {
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const googleLogin = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      try {
+        const { access_token } = tokenResponse;
+        const tokenData = await post("/oauth/google-login", {
+          credential: access_token,
+        });
+        localStorage.setItem("accessToken", tokenData.accessToken);
+        localStorage.setItem("refreshToken", tokenData.refreshToken);
+        navigate("/");
+      } catch (error) {
+        toast.error("Đăng nhập bằng Google thất bại");
+      }
+    },
+    onError: () => {
+      console.log("Google login failed");
+      toast.error("Đăng nhập bằng Google thất bại");
+    },
+    flow: "implicit", // hoặc "auth-code" nếu dùng backend exchange
+  });
+
+  const githubLogin = () => {
+    const width = 600,
+      height = 600;
+    const left = (window.innerWidth - width) / 2;
+    const top = (window.innerHeight - height) / 2;
+
+    const githubAuthURL = `https://github.com/login/oauth/authorize?client_id=${
+      import.meta.env.VITE_GITHUB_CLIENT_ID
+    }&redirect_uri=${import.meta.env.VITE_GITHUB_REDIRECT_URI}&scope=user`;
+
+    window.open(
+      githubAuthURL,
+      "GitHub Login",
+      `width=${width},height=${height},top=${top},left=${left}`
+    );
+
+    const listener = (event) => {
+      if (event.data.accessToken) {
+        const { accessToken, refreshToken } = event.data; // tokenData from backend
+
+        localStorage.setItem("accessToken", accessToken);
+        localStorage.setItem("refreshToken", refreshToken);
+        navigate("/");
+      } else {
+        toast.error("Đăng nhập với GitHub thất bại");
+      }
+      window.removeEventListener("message", listener);
+    };
+
+    window.addEventListener("message", listener);
   };
 
   return (
@@ -157,7 +214,11 @@ const Login = () => {
         </div>
 
         <div className={styles.socialButtons}>
-          <button className={styles.socialButton} type="button">
+          <button
+            className={styles.socialButton}
+            type="button"
+            onClick={googleLogin}
+          >
             <svg width="20" height="20" viewBox="0 0 24 24">
               <path
                 fill="currentColor"
@@ -179,7 +240,11 @@ const Login = () => {
             Continue with Google
           </button>
 
-          <button className={styles.socialButton} type="button">
+          <button
+            className={styles.socialButton}
+            onClick={githubLogin}
+            type="button"
+          >
             <svg width="20" height="20" viewBox="0 0 24 24">
               <path
                 fill="currentColor"

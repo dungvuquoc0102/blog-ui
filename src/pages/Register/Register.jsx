@@ -268,7 +268,7 @@ const Register = () => {
       </form>
 
       {/* Social Register */}
-      <div className={styles.socialSection}>
+      {/* <div className={styles.socialSection}>
         <div className={styles.divider}>
           <span>Or sign up with</span>
         </div>
@@ -306,7 +306,7 @@ const Register = () => {
             Continue with GitHub
           </button>
         </div>
-      </div>
+      </div> */}
 
       {/* Footer */}
       <div className={styles.footer}>

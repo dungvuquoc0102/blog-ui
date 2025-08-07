@@ -10,20 +10,20 @@ import { fetchUser, logout } from "@/features/user/userSlice";
 import { toast } from "react-toastify";
 
 const Header = () => {
-  // Mock authentication state - trong thực tế sẽ từ context/store
-  const dispatch = useDispatch();
-  const { isAuthenticated, user } = useSelector((state) => state.user);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const dropdownRef = useRef(null);
   const notificationRef = useRef(null);
+  const { isAuthenticated, user } = useSelector((state) => state.user);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    if (isAuthenticated && !user) {
+    if (!user) {
       dispatch(fetchUser());
     }
-  }, [isAuthenticated, user, dispatch]);
+  }, [dispatch]);
 
   // Mock notifications data
   const mockNotifications = [

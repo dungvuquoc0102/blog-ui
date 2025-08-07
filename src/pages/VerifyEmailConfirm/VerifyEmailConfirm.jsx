@@ -15,16 +15,18 @@ const VerifyEmailConfirm = () => {
   useEffect(() => {
     const verifyEmail = async () => {
       try {
-        const result = await post("/auth/verify-email", { token });
-        if (result) {
+        const tokenData = await post("/auth/verify-email", { token });
+
+        if (tokenData) {
           setIsSuccess(true);
 
-          localStorage.setItem("accessToken", result.data.accessToken);
-          localStorage.setItem("refreshToken", result.data.refreshToken);
+          localStorage.setItem("accessToken", tokenData.accessToken);
+          localStorage.setItem("refreshToken", tokenData.refreshToken);
         } else {
           setIsSuccess(false);
         }
       } catch (error) {
+        lo;
         setIsSuccess(false);
       } finally {
         setLoading(false);
@@ -47,6 +49,7 @@ const VerifyEmailConfirm = () => {
     );
   }
 
+  console.log(isSuccess);
   return (
     <div className={styles.container}>
       {isSuccess && (
