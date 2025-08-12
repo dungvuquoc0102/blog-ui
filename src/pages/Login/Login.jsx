@@ -96,7 +96,6 @@ const Login = () => {
       }
     },
     onError: () => {
-      console.log("Google login failed");
       toast.error("Đăng nhập bằng Google thất bại");
     },
     flow: "implicit", // hoặc "auth-code" nếu dùng backend exchange
@@ -112,11 +111,13 @@ const Login = () => {
       import.meta.env.VITE_GITHUB_CLIENT_ID
     }&redirect_uri=${import.meta.env.VITE_GITHUB_REDIRECT_URI}&scope=user`;
 
-    window.open(
+    const popup = window.open(
       githubAuthURL,
       "GitHub Login",
       `width=${width},height=${height},top=${top},left=${left}`
     );
+
+    let isLoginSuccessful = false; // Biến trạng thái để theo dõi đăng nhập
 
     const listener = (event) => {
       if (event.data.accessToken) {
@@ -124,14 +125,28 @@ const Login = () => {
 
         localStorage.setItem("accessToken", accessToken);
         localStorage.setItem("refreshToken", refreshToken);
+
+        isLoginSuccessful = true; // Đánh dấu đăng nhập thành công
         navigate("/");
       } else {
+        isLoginSuccessful = false;
         toast.error("Đăng nhập với GitHub thất bại");
       }
       window.removeEventListener("message", listener);
     };
 
     window.addEventListener("message", listener);
+
+    const checkPopupClosed = setInterval(() => {
+      if (popup && popup.closed) {
+        clearInterval(checkPopupClosed);
+        window.removeEventListener("message", listener);
+        if (!isLoginSuccessful) {
+          // Chỉ hiển thị lỗi nếu đăng nhập chưa thành công
+          toast.error("Đăng nhập với GitHub thất bại");
+        }
+      }
+    }, 500);
   };
 
   return (

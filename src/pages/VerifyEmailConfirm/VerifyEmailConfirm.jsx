@@ -57,7 +57,9 @@ const VerifyEmailConfirm = () => {
           <p className={styles.success}>
             Xác thực email thành công! Bạn có thể quay lại trang chủ.
           </p>
-          <button onClick={() => navigate("/")}>Về trang chủ</button>
+          <button className={styles.verifyBtn} onClick={() => navigate("/")}>
+            Về trang chủ
+          </button>
         </div>
       )}
       {!isSuccess && (
@@ -65,7 +67,9 @@ const VerifyEmailConfirm = () => {
           <p className={styles.error}>
             Xác thực thất bại. Token không hợp lệ hoặc đã hết hạn.
           </p>
-          <button onClick={() => navigate("/")}>Về trang chủ</button>
+          <button className={styles.verifyBtn} onClick={() => navigate("/")}>
+            Về trang chủ
+          </button>
         </div>
       )}
     </div>
